@@ -1,0 +1,6 @@
+*.jpg
+*.zip
+/.idea
+/temp
+/TACO-master
+*.h5
