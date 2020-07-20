@@ -14,3 +14,5 @@
 3. predict.py：预测，注意更改输入输出图像路径
 + 我的储存方式是predict一个文件夹，下面有input和result
 + train的input放了WaterCO的batch_11_new-batch_15_new
+
+***logs里面是最近一次的训练权重***
