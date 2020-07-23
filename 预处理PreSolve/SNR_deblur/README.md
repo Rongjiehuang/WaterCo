@@ -11,7 +11,7 @@
 + model：（百度云）下载到checkpoints/color/checkpoints
 + data：根据datalist.txt放置到./training_set（自建）
 + datalist.txt：记录data对路径，其中每一行前一个是期望输出（TACO原图），后一个是输入（注水后初步去水，即WaterCo-2.0），用空格隔开
-+ file.m：用于缠上datalist.txt
++ file.m：用于产生datalist.txt
 + run_model.py：
     1. train时如果不用gpu则gpu=-1
     2. 其余参照原作者的README.md（放在了./models）
