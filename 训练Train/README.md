@@ -1,6 +1,31 @@
+# 截止2020/7/24 #
+# 路径 #
+/detector/model：存放训练好的模型文件与Tensorboard记录
+其中：
+(Water1) 注水V1表示使用PS获得的水下WaterCo数据集训练结果
+(Water2) 注水V2表示使用OpenCV获得的水下WaterCo数据集训练结果
+注水V3表示使用Matlab获得的水下WaterCo数据集训练结果
+
+均各训练20Epochs与40Epochs
+
+# 模型文件 #
+
+链接：https://pan.baidu.com/s/173ya4-s4W7izW57gEAVI0g 
+提取码：qgc9
+
+
+# 服务器训练方法 #
+
+1. 开机
+2. 进入PycharmProjects/TACO中，分别有DATA1-Training/DATA2-Training，分别对应注水V1、注水V2数据集
+3. 进入detector文件夹，打开终端，激活环境
+		source activate hrj-3.7
+4. 打开detector.py，按照提示开始训练
+
 <p align="center">
 <img src="https://raw.githubusercontent.com/wiki/pedropro/TACO/images/logonav.png" width="25%"/>
 </p>
+
 
 TACO is a growing image dataset of waste in the wild. It contains images of litter taken under
 diverse environments: woods, roads and beaches. These images are manually labeled and segmented
