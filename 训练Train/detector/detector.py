@@ -193,8 +193,16 @@ def evaluate_coco(model, dataset, coco, eval_type="bbox", limit=0, image_ids=Non
         t_prediction, t_prediction / len(image_ids)))
     print("Total time: ", time.time() - t_start)
 
-if __name__ == '__main__':
+if __name__ == '__main__':   #进入主函数
     import argparse
+####################### 2020/7/25  Rongjiehuang  ##################################
+######################五大诉求：1.读取名称映射.csv配置
+######################         2.读取WaterCo数据集
+######################         3.读取相关配置
+######################         4.读取网络模型
+######################         5.正式训练/测试/评估
+
+
 
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='Run Mask R-CNN on TACO.')
@@ -214,7 +222,7 @@ if __name__ == '__main__':
     print("Dataset: ", args.dataset)
     print("Logs: ", DEFAULT_LOGS_DIR)
 
-    # Read map of target classes
+    # Read map of target classes    #1. 读取.csv文件，其中存储类型名称的映射
     class_map = {}
     map_to_one_class = {}
     with open(args.class_map) as csvfile:
@@ -222,7 +230,7 @@ if __name__ == '__main__':
         class_map = {row[0]: row[1] for row in reader}
         map_to_one_class = {c: 'Litter' for c in class_map}
 
-    # Load datasets
+    # Load datasets                 #2. 读取WaterCo数据集
     if args.command == "train":
 
         # Training dataset.
@@ -244,7 +252,7 @@ if __name__ == '__main__':
         dataset_test.prepare()
         nr_classes = dataset_test.num_classes
 
-    # Configurations
+    # Configurations                    #3. 继承配置文件config.py，并按需求修改
     if args.command == "train":
         class TacoTrainConfig(Config):
             NAME = "taco"
@@ -267,13 +275,13 @@ if __name__ == '__main__':
         config = TacoTestConfig()
     config.display()
 
-    # Create model
+    # Create model                          #4.1  创建模型框架结构
     if args.command == "train":
         model = MaskRCNN(mode="training", config=config, model_dir=DEFAULT_LOGS_DIR)
     else:
         model = MaskRCNN(mode="inference", config=config, model_dir=DEFAULT_LOGS_DIR)
 
-    # Select weights file to load
+    # Select weights file to load          #4.2   根据模型框架结构读入模型参数
     if args.model.lower() == "coco":
         model_path = COCO_MODEL_PATH
         # Download weights file
@@ -298,11 +306,11 @@ if __name__ == '__main__':
     else:
         model.load_weights(model_path, model_path, by_name=True)
 
-    # Train or evaluate
+    # Train or evaluate                 # 5.  选择训练/评估/测试  进入实际环节
     if args.command == "train":
 
         if args.aug:
-            if not config.USE_OBJECT_ZOOM:
+            if not config.USE_OBJECT_ZOOM:         #  选择数据增强
                 # Image Augmentation Pipeline
                 augmentation_pipeline = iaa.Sequential([
                     iaa.AdditiveGaussianNoise(scale=0.01 * 255, name="AWGN"),
@@ -327,9 +335,9 @@ if __name__ == '__main__':
                     iaa.Affine(rotate=(-45, 45)),  # rotate by -45 to 45 degrees
                 ], random_order=True)
         else:
-            augmentation_pipeline = None
+            augmentation_pipeline = None     # 不选择数据增强
 
-        # Save training meta to log dir
+        # Save training meta to log dir      # 设置训练参数
         training_meta = {
             'number of classes': nr_classes,
             'round': args.round,
