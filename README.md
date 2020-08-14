@@ -17,9 +17,9 @@
 这里我们通过对数据集预处理，由TACO数据集制作WaterCo(-1.0)数据集，WaterCo-2.0数据集，WaterCo-3.0数据集，
 
 **TACO数据集：陆地垃圾数据集
-WaterCo(-1.0)数据集：水下垃圾数据集
-WaterCo-2.0数据集：WaterCo(-1.0)数据集基础上去除domain gap尝试1：颜色校正
-WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：去模糊**
+WaterCo(-1.0)数据集：水下垃圾数据集  
+WaterCo-2.0数据集：WaterCo(-1.0)数据集基础上去除domain gap尝试1：颜色校正  
+WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：去模糊**  
 <div align="center">
   <div class="column">
     <img src="https://raw.githubusercontent.com/Rongjiehuang/WaterCo/master/Pic/4.1.png" width="40%" title="数据集之间关系" hspace="3">
@@ -73,10 +73,12 @@ WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：�
 2)	RGB下对比度校正：该步骤关键在于处理像素值在0.2%-99.8%部分使其释放图遍布0-255区域。对绿色通道，直方图需向两端拉伸，该过程可表示为：
 
 	P_o=(P_i-X_min )((255-0)/(X_max-X_min ))
+	
 其中P_o为校正后像素值，P_i为校正前像素值；X_min、X_max分别为绿色通道0.2%-99.8%范围内的最小和最大值。
 对红色通道，其直方图需要向大的方向拉伸以达到增强效果，该过程可表示为：
 
 	P_o=(P_i-X_min )((255-X_min)/(X_max-X_min ))
+	
 对蓝色通道则需向小的方向拉伸，该过程可表示为：
 
 	P_o=(P_i-X_min )((X_max-0)/(X_max-X_min ))
@@ -140,12 +142,12 @@ WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：�
 3)	读取神经网络训练参数配置
 使用子类继承基类原始定义，并在子类中修改对应参数，其中包括训练使用GPU数量、GPU显存容量、学习率、学习动量、训练集容量、ROI掩膜尺度等信息，作为神经网络的配置参数。
  
-	由于是分类问题，使用经典的交叉熵损失函数
+	`由于是分类问题，使用经典的交叉熵损失函数
 	Crossentropy loss
 	loss = K.sparse_categorical_crossentropy(target=anchor_class,output=rpn_class_logits,from_logits=True)
 	选择学习率优化器为SGD
 	Optimizer
-	OPTIMIZER = 'SGD'
+	OPTIMIZER = 'SGD'`
 
 4)	读取网络模型
 创建模型框架结构为MaskR-CNN，并根据模型结构选择模型参数权重，初始化权重为COCO数据集训练权重，可以在公开地址中下载到。
@@ -195,21 +197,21 @@ WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：�
 
 ## Reference ##
 
-[1]	Tao, Xin, et al. "Scale-recurrent network for deep image deblurring." Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018.
-[2]	X. Mao, C. Shen, and Y.-B. Yang. Image restoration using very deep convolutional encoder-decoder networks with symmetric skip connections. In NIPS, pages 2802–2810, 2016.
-[3]	C. J. Schuler, M. Hirsch, S. Harmeling, and B. Schölkopf. Learning to deblur. TPAMI, 38(7):1439–1451, 2016.
-[4]	Chakrabarti. A neural approach to blind motion deblurring.In ECCV, pages 221–235. Springer, 2016.
-[5]	S. Su, M. Delbracio, J. Wang, G. Sapiro, W. Heidrich, and O. Wang. Deep video deblurring. pages 1279–1288, 2017.
-[6]	S. Nah, T. H. Kim, and K. M. Lee. Deep multi-scale convolutional neural network for dynamic scene deblurring. Pages 3883–3891, 2017.
-[7]	C. Dong, C. C. Loy, K. He, and X. Tang. Learning a deep convolutional network for image super-resolution. In ECCV, pages 184–199. Springer, 2014.
-[8]	Ronneberger, P. Fischer, and T. Brox. U-net: Convolutional networks for biomedical image segmentation. In MICCAI, pages 234–241. Springer, 2015.
-[9]	Q. Chen and V. Koltun. Photographic image synthesis with cascaded refinement networks. In ICCV. IEEE, 2017.
-[10]	Goodfellow, I., Bengio, Y., Courville, A.．Deep learning (Vol. 1)．Cambridge：MIT press，2016
-[11]	Gu, J., Wang, Z., Kuen, J., Ma, L., Shahroudy, A., Shuai, B., Liu, T., Wang, X., Wang, L., Wang, G. and Cai, J., 2015. Recent advances in convolutional neural networks. arXiv preprint arXiv:1512.07108.
+[1]	Tao, Xin, et al. "Scale-recurrent network for deep image deblurring." Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018.  
+[2]	X. Mao, C. Shen, and Y.-B. Yang. Image restoration using very deep convolutional encoder-decoder networks with symmetric skip connections. In NIPS, pages 2802–2810, 2016.  
+[3]	C. J. Schuler, M. Hirsch, S. Harmeling, and B. Schölkopf. Learning to deblur. TPAMI, 38(7):1439–1451, 2016.  
+[4]	Chakrabarti. A neural approach to blind motion deblurring.In ECCV, pages 221–235. Springer, 2016.  
+[5]	S. Su, M. Delbracio, J. Wang, G. Sapiro, W. Heidrich, and O. Wang. Deep video deblurring. pages 1279–1288, 2017.  
+[6]	S. Nah, T. H. Kim, and K. M. Lee. Deep multi-scale convolutional neural network for dynamic scene deblurring. Pages 3883–3891, 2017.  
+[7]	C. Dong, C. C. Loy, K. He, and X. Tang. Learning a deep convolutional network for image super-resolution. In ECCV, pages 184–199. Springer, 2014.  
+[8]	Ronneberger, P. Fischer, and T. Brox. U-net: Convolutional networks for biomedical image segmentation. In MICCAI, pages 234–241. Springer, 2015.  
+[9]	Q. Chen and V. Koltun. Photographic image synthesis with cascaded refinement networks. In ICCV. IEEE, 2017.  
+[10]	Goodfellow, I., Bengio, Y., Courville, A.．Deep learning (Vol. 1)．Cambridge：MIT press，2016  
+[11]	Gu, J., Wang, Z., Kuen, J., Ma, L., Shahroudy, A., Shuai, B., Liu, T., Wang, X., Wang, L., Wang, G. and Cai, J., 2015. Recent advances in convolutional neural networks. arXiv preprint arXiv:1512.07108.  
 [12]	Girshick R , Donahue J , Darrell T , et al. Rich Feature Hierarchies for Accurate Object Detection and Semantic Segmentation[C]// CVPR. IEEE, 2014.
-[13]	Girshick R . Fast R-CNN[J]. Computer ence, 2015.
-[14]	Ren S , He K , Girshick R , et al. Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks[J]. IEEE Transactions on Pattern Analysis & Machine Intelligence, 2017, 39(6):1137-1149.
-[15]	Kaiming H , Georgia G , Piotr D , et al. Mask R-CNN[J]. IEEE Transactions on Pattern Analysis & Machine Intelligence, 2017, PP:1-1.
-[16]	侯国家. 一种水下光学图像的模拟方法：中国，201910142744.X [P]. 2019-07-30
-[17]	Iqbal, Kashif, et al. "Enhancing the low quality images using unsupervised colour correction method." 2010 IEEE International Conference on Systems, Man and Cybernetics. IEEE, 2010.
-[18]	凌梅. 基于卷积神经网络的水下图像质量提升方法. MS thesis. 厦门大学, 2018.
+[13]	Girshick R . Fast R-CNN[J]. Computer ence, 2015.  
+[14]	Ren S , He K , Girshick R , et al. Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks[J]. IEEE Transactions on Pattern Analysis & Machine Intelligence, 2017, 39(6):1137-1149.  
+[15]	Kaiming H , Georgia G , Piotr D , et al. Mask R-CNN[J]. IEEE Transactions on Pattern Analysis & Machine Intelligence, 2017, PP:1-1.  
+[16]	侯国家. 一种水下光学图像的模拟方法：中国，201910142744.X [P]. 2019-07-30  
+[17]	Iqbal, Kashif, et al. "Enhancing the low quality images using unsupervised colour correction method." 2010 IEEE International Conference on Systems, Man and Cybernetics. IEEE, 2010.  
+[18]	凌梅. 基于卷积神经网络的水下图像质量提升方法. MS thesis. 厦门大学, 2018.  
