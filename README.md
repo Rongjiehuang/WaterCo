@@ -1,33 +1,45 @@
-#基于卷积神经网络的海洋垃圾识别分类#
+# 基于卷积神经网络的海洋垃圾识别分类 #
 
-
+<br>
 
 ## 目的、意义
-### 1.Motivation##
+### 1.Motivation
 
 项目旨在以Mask-RCNN为基础进行海洋垃圾识别分类，并对比不同图像预处理下识别的准确性，试图寻找一种有效的水下目标检测识别方法。
 
 若使用Taco训练集训练好的模型评估WaterCo-1.0测试集，但因为数据集背景不同、域间差异而导致效果不佳，即存在Domain gap。迫切的需要一种方法修正测试集，以消除domain gap，使得原有训练模型能够适用于其他数据集。
 
-### 2.Contribution##
+### 2.Contribution
 
 我们提出了一种消除大气与海洋图片数据集背景差异方法，使用大气训练集得到的训练模型评估海洋测试集变为可能。这种映射方法成为消除域间隔阂的桥梁。
 
-## 数据集处理##
+## 数据集处理
 这里我们通过对数据集预处理，由TACO数据集制作WaterCo(-1.0)数据集，WaterCo-2.0数据集，WaterCo-3.0数据集，
 
 **TACO数据集：陆地垃圾数据集
 WaterCo(-1.0)数据集：水下垃圾数据集
 WaterCo-2.0数据集：WaterCo(-1.0)数据集基础上去除domain gap尝试1：颜色校正
 WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：去模糊**
+<div align="center">
+  <div class="column">
+    <img src="https://raw.githubusercontent.com/Rongjiehuang/WaterCo/master/Pic/4.1.png" width="40%" title="数据集之间关系" hspace="3">
+  </div>
+</div>
+
+</br>
 
 ### 1. TACO数据集制作WaterCo(-1.0)数据集 ##
 <div align="center">
   <div class="column">
-    <img src="https://raw.githubusercontent.com/wiki/pedropro/TACO/images/1.png" width="17%" hspace="3">
+    <img src="https://raw.githubusercontent.com/Rongjiehuang/WaterCo/master/Pic/3.2(a).png" width="35%" title="TACO"  hspace="3">
+	<p>TACO数据集</p>
+  </div>
+  <div class="column">
+    <img src="https://raw.githubusercontent.com/Rongjiehuang/WaterCo/master/Pic/3.2(b).png" width="35%" title="WaterCO-1.0" hspace="3">
+	<p>WaterCO-1.0数据集</p>
   </div>
 </div>
-</br>
+
 
  为模拟水下图像低对比度、低清晰度、蓝绿色为主的特点，本项目中采用一种类似“逆暗通道去雾”的算法对大气图像进行处理，其主要思路为以某一张真实水下图像为参照，通过计算获取该图像的三通道全局背景光及三通道透射率，再结合水下光学成像模型将仓真实水下图像所得参数附加到大气图像上实现水下情况模拟。具体流程如下：</br>
 1)	通过取每个像素三通道中的最小值组成灰度图得到暗通道；</br>
@@ -49,7 +61,7 @@ WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：�
 
 <div align="center">
   <div class="column">
-    <img src="https://raw.githubusercontent.com/wiki/pedropro/TACO/images/1.png" width="17%" hspace="3">
+    <img src="https://raw.githubusercontent.com/Rongjiehuang/WaterCo/master/Pic/3.3.png" width="35%" hspace="3">
   </div>
 </div>
 </br>
@@ -77,9 +89,8 @@ WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：�
 运用了Xin Tao等人[1]的尺度递归网络（Scale-Recurrent Network，简称SRN），它以不同比例从输入图像中向下采样的一系列模糊图像作为输入，并经过一系列卷积和反卷积运算生成一组对应的清晰图像。在全分辨率下，最清晰的是最终输出。该网络具有训练效率高、测试速度快的优点.
 
 
-**Setup**
+**Setup-train**
 
-	*train:*
 	+ model：（百度云链接：https://pan.baidu.com/s/1U_w7PmqVTzqVEhHbaxCGGw 提取码：nv5d）下载到checkpoints/color/checkpoints
 	+ data：根据datalist.txt放置到./training_set（自建）
 	+ datalist.txt：记录data对路径，其中每一行前一个是期望输出（TACO原图），后一个是输入（注水后初步去水，即WaterCo-2.0），用空格隔开
@@ -92,7 +103,8 @@ WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：�
 	    2. ckpt_name = model_name + '-' + str(420)中str()改为断点步数（如果从头开始就把相关202-205行都注释掉）
 	+ logs.txt：记录训练过程，可根据loss选择合适的model
 	
-	*test:*
+**Setup-test**
+
 	+ run_model.py：
 	    1. 将args.phase = 'train'注释掉
 	    2. 设置input_path和output_path
@@ -111,7 +123,7 @@ WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：�
 
 <div align="center">
   <div class="column">
-    <img src="https://raw.githubusercontent.com/wiki/pedropro/TACO/images/1.png" width="17%" hspace="3">
+    <img src="https://raw.githubusercontent.com/Rongjiehuang/WaterCo/master/Pic/3.7.png" hspace="3" title="训练过程">
   </div>
 </div>
 </br>
@@ -129,10 +141,10 @@ WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：�
 使用子类继承基类原始定义，并在子类中修改对应参数，其中包括训练使用GPU数量、GPU显存容量、学习率、学习动量、训练集容量、ROI掩膜尺度等信息，作为神经网络的配置参数。
  
 	由于是分类问题，使用经典的交叉熵损失函数
-	# Crossentropy loss
+	Crossentropy loss
 	loss = K.sparse_categorical_crossentropy(target=anchor_class,output=rpn_class_logits,from_logits=True)
 	选择学习率优化器为SGD
-	# Optimizer
+	Optimizer
 	OPTIMIZER = 'SGD'
 
 4)	读取网络模型
@@ -142,7 +154,8 @@ WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：�
 训练前可以选择是否进行数据增强，如有必要则可以提高模型鲁棒性。在训练步分别设置训练轮数为20/40，学习率为0.001等值，设置模型保存位置，开始模型训练。在训练过程中，需要在每轮中不断保存模型参数与tensorboard信息。
 
 
-**Setup**
+**Setup**<br>
+
     # First make sure you have split the dataset into train/val/test set. e.g. You should have annotations_0_train.json
     # in your dataset dir.
     # Otherwise, You can do this by calling
@@ -162,8 +175,8 @@ WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：�
 
 
 
-
-**Setup**
+<br><br><br>
+**Setup**<br>
     # First make sure you have split the dataset into train/val/test set. e.g. You should have annotations_0_train.json
     # in your dataset dir.
     # Otherwise, You can do this by calling
