@@ -49,7 +49,7 @@ WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：�
 其中三通道透射率分别为R=0.5、G=0.065、B=0.075；</br>
 5)	根据水下光学图像成像模型，对大气图像做如下处理：
 		
-	I_λ (x)=t_λ (x)J(x)+(1-t_λ (x)) B_λ,λ∈{R,G,B}
+	`I_λ (x)=t_λ (x)J(x)+(1-t_λ (x)) B_λ,λ∈{R,G,B}`  
 其中I_λ (x)表示水下模拟图像，J(x)表示清晰的大气图像；</br>
 6)	加入高斯模糊模拟水下模糊的成像效果。
 
@@ -72,16 +72,16 @@ WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：�
 
 2)	RGB下对比度校正：该步骤关键在于处理像素值在0.2%-99.8%部分使其释放图遍布0-255区域。对绿色通道，直方图需向两端拉伸，该过程可表示为：
 
-	P_o=(P_i-X_min )((255-0)/(X_max-X_min ))
+		P_o=(P_i-X_min )((255-0)/(X_max-X_min ))
 	
-其中P_o为校正后像素值，P_i为校正前像素值；X_min、X_max分别为绿色通道0.2%-99.8%范围内的最小和最大值。
-对红色通道，其直方图需要向大的方向拉伸以达到增强效果，该过程可表示为：
+	其中P_o为校正后像素值，P_i为校正前像素值；X_min、X_max分别为绿色通道0.2%-99.8%范围内的最小和最大值。
+	对红色通道，其直方图需要向大的方向拉伸以达到增强效果，该过程可表示为：
 
-	P_o=(P_i-X_min )((255-X_min)/(X_max-X_min ))
+		P_o=(P_i-X_min )((255-X_min)/(X_max-X_min ))
 	
-对蓝色通道则需向小的方向拉伸，该过程可表示为：
-
-	P_o=(P_i-X_min )((X_max-0)/(X_max-X_min ))
+	对蓝色通道则需向小的方向拉伸，该过程可表示为：
+		
+		P_o=(P_i-X_min )((X_max-0)/(X_max-X_min ))
 
 3)	HIS下对比度校正：将颜色空间由RGB转到HIS空间后，参照上述扩展方法对饱和度（S）和强度（I）通道进行两边扩展。
 
@@ -120,8 +120,8 @@ WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：�
 
 ## Train ##
 
-我们使用Mask-RCNN网络进行训练，Mask-RCNN使用在这之前已经详细讲解，这里不再赘述。
-其中我们选择了网络初始权重为COCO数据集训练下的Mask-RCNN权重。训练环境为Keras-2.3.1, tensorflowGPU-1.13.1。实验室4×NVIDIA 1060Ti环境下，能够为模型训练创造良好环境。
+我们使用Mask-RCNN网络进行训练，Mask-RCNN使用在这之前已经详细讲解，这里不再赘述。  
+其中我们选择了网络初始权重为COCO数据集训练下的Mask-RCNN权重。训练环境为Keras-2.3.1, tensorflowGPU-1.13.1。实验室4×NVIDIA 1060Ti环境下，能够为模型训练创造良好环境。  
 
 <div align="center">
   <div class="column">
@@ -135,19 +135,18 @@ WaterCo-3.0数据集：WaterCo-2.0数据集基础上去除domain gap尝试2：�
 1)	读取名称映射.csv配置
 文件包含了基类与子类的映射，通过这份.csv文件的定义，使得类别之间的关系得到明确。
  
-图3. 7 映射文件示例
 2)	读取WaterCo数据集
 读取经过数据集迁移工作得到的WaterCo数据集，并根据参数选择对应读入训练集，忽略测试集、验证集。
 
 3)	读取神经网络训练参数配置
 使用子类继承基类原始定义，并在子类中修改对应参数，其中包括训练使用GPU数量、GPU显存容量、学习率、学习动量、训练集容量、ROI掩膜尺度等信息，作为神经网络的配置参数。
  
-	`由于是分类问题，使用经典的交叉熵损失函数
-	Crossentropy loss
-	loss = K.sparse_categorical_crossentropy(target=anchor_class,output=rpn_class_logits,from_logits=True)
-	选择学习率优化器为SGD
-	Optimizer
-	OPTIMIZER = 'SGD'`
+  Crossentropy loss: 于是分类问题，使用经典的交叉熵损失函数  
+  
+	loss = K.sparse_categorical_crossentropy(target=anchor_class,output=rpn_class_logits,from_logits=True)  
+  Optimizer: 选择学习率优化器为SGD  
+  
+	OPTIMIZER = 'SGD'  
 
 4)	读取网络模型
 创建模型框架结构为MaskR-CNN，并根据模型结构选择模型参数权重，初始化权重为COCO数据集训练权重，可以在公开地址中下载到。
